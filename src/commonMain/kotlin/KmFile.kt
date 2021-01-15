@@ -65,19 +65,3 @@ public fun File.deleteDir(filesOnly: Boolean, retries: UInt = 0U): Boolean { // 
 }
 
 
-//private fun x(): Unit {
-//	val f = File("x")
-//	f.canWrite()
-//	f.canWrite()
-//	f.name
-//	f.path
-//	f.absoluteFile
-//	f.parent
-//	f.isDirectory
-//	f.exists()
-//	f.lastModified()
-//	f.length()
-//	f.renameTo(f)
-//
-//}
-

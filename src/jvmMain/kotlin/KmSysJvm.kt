@@ -1,7 +1,5 @@
 package de.rdvsb.kmapi
 
-import org.omg.CORBA.UNKNOWN
-
 public actual object System {
 	public actual object err {
 		public actual fun println(line: String): Unit = java.lang.System.err.println(line)
