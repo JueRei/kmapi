@@ -1,4 +1,4 @@
-# Kotlin multi-platform api for scripts and commandline utilities
+# Kotlin multi-platform API for scripts and command line utilities
 Provide some useful Java standard library API classes for Kotlin Native
 
 
