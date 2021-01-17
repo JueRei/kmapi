@@ -3,17 +3,24 @@ Provide some useful Java standard library API classes for Kotlin Native
 
 
 ## Preliminary version 0.0.1
- * only JVM parts working
- * incomplete functionality 
+### parts working
+
+| Module | Common | JVM | NativeLinux | NativeMingw |
+| :---   | :---:  | :---: | :---: | :---: |
+| File | x | x | x | x |
+| InputStream | x | x | - | - |
+| OutputStream | x | x | - | - |
+| KmProcess | x | x | - | - |
+
 
 ## Goals
- * Abillity to write these utilities in a platform independent fashion
- * Facilitate the creation of script like utilities (e.g. alternative or replacement of Bash, Perl, Python sripts)
+ * Ability to write these utilities in a platform independent fashion
+ * Facilitate the creation of script like utilities (e.g. alternative or replacement of Bash, Perl, Python scripts)
  * Develop using the JVM, deploy as native
 
 ## Non goals
  * Provide the full Java standard library for Native
- * Provide the full functinality of Java classes 
+ * Provide the full functionality of Java classes 
  * Create a replacement of the Kotlin standard library
  * Support mobile platforms
  * Support Web platforms
