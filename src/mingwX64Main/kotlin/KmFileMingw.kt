@@ -1,25 +1,18 @@
 package de.rdvsb.kmapi
 
-private fun posixErrorMessage(err: Int): String {
+import kotlinx.cinterop.*
+//import platform.mingw_x64.ENOTFOUND
+import platform.posix.*
+import platform.windows.*
+import kotlin.math.max
 
-	strerror_s(cstrBuf, cstrBufLen.toULong(), err)
-	return cstrBuf.toKString()
-}
+import kotlin.native.concurrent.ThreadLocal
 
-private fun winSysErrMessage(winErrorCode: UInt): String {
-	memScoped {
-		System.err.println("winSysErrMessage winErrorCode=\"$winErrorCode\"")
-		val msgBufSize = 256
-		val msgBuf = allocArray<WCHARVar>(msgBufSize)
+/*
+ * Native specials
+ */
+// Windows
 
-		val rc = FormatMessageW((FORMAT_MESSAGE_FROM_SYSTEM + FORMAT_MESSAGE_IGNORE_INSERTS).toUInt(),
-		                        null, winErrorCode, 0U, msgBuf, msgBufSize.toUInt(), null).toInt()
-
-		rc == 0 && return "WinError $winErrorCode"
-
-		return msgBuf.toKString().trimEnd() // ('\n', '\r')
-	}
-}
 
 private const val WIN_TO_UNIX_EPOCH_MS = 11644473600 * 1000L // A Windows file time is a 64-bit value that represents the number relative to 12:00 A.M. January 1, 1601 Coordinated Universal Time (UTC).
 
@@ -39,7 +32,7 @@ public actual class File actual constructor(pathName: String) : FileNativeCommon
 		public actual val separator: String
 			get() = "/"
 		public actual fun createTempDirectory(prefix: String): File {
-			val dirName = "${System.getenv("Tmp") ?: System.getenv("Temp") ?: "c:{$separatorChar}Temp"}$separatorChar$prefix${random()}"
+			val dirName = "${System.getenv("Tmp") ?: System.getenv("Temp") ?: "c:{$separatorChar}Temp"}$separatorChar$prefix${rand()}"
 			TODO("create dir")
 			return File(dirName)
 		}
@@ -114,20 +107,20 @@ public actual class File actual constructor(pathName: String) : FileNativeCommon
 	public actual val canonicalFile: File
 		get() = File(absolutePath, absName, canonicalName)
 
-	public actual val exists: Boolean get() = fillFileAttributes(true)
+	public actual fun exists(): Boolean = fillFileAttributes(true)
 	public actual val isDirectory: Boolean get() = fillFileAttributes(true) && (dwFileAttributes and FILE_ATTRIBUTE_DIRECTORY != 0)
 	public actual val isDevice: Boolean get() = fillFileAttributes(true) && (dwFileAttributes and FILE_ATTRIBUTE_DEVICE != 0)
 	public actual val isSymbolicLink: Boolean get() = fillFileAttributes(true) && (dwFileAttributes and FILE_ATTRIBUTE_REPARSE_POINT != 0) // not in Java File class
 	public actual val isHidden: Boolean get() = fillFileAttributes(true) && (dwFileAttributes and FILE_ATTRIBUTE_HIDDEN != 0)
 	public actual val isFile: Boolean get() = !isDirectory && !isDevice && dwFileAttributes != 0
-	public actual val canWrite: Boolean get() = fillFileAttributes() && isFile && (dwFileAttributes and FILE_ATTRIBUTE_READONLY == 0)
-	public actual val canRead: Boolean get() = fillFileAttributes() && isFile // TODO: check if read/write on Windows devices is possible with regular read write API
+	public actual fun canWrite(): Boolean = fillFileAttributes() && isFile && (dwFileAttributes and FILE_ATTRIBUTE_READONLY == 0)
+	public actual fun canRead(): Boolean = fillFileAttributes() && isFile // TODO: check if read/write on Windows devices is possible with regular read write API
 
-	public actual val lastModified: Long get() = if (fillFileAttributes()) mTimeMS else 0L
-	public actual val creationTime: Long get() = if (fillFileAttributes()) cTimeMS else 0L // not in Java File class
-	public actual val length: Long get() = if (fillFileAttributes()) fileLength else 0L
+	public actual fun lastModified(): Long = if (fillFileAttributes()) mTimeMS else 0L
+	public actual fun creationTime(): Long = if (fillFileAttributes()) cTimeMS else 0L // not in Java File class
+	public actual fun length(): Long = if (fillFileAttributes()) fileLength else 0L
 
-	public fun renameTo(newFile: File): Boolean {
+	public actual fun renameTo(newFile: File): Boolean {
 		if (name.isEmpty() || newFile.name.isEmpty() || canonicalPath == newFile.canonicalPath) return false
 
 		val rc = MoveFileExW(canonicalPath, newFile.canonicalPath, MOVEFILE_COPY_ALLOWED)
