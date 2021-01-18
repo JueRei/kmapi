@@ -19,6 +19,7 @@ public actual object System {
 	public actual val lineSeparator: String = java.lang.System.lineSeparator()
 
 	public actual fun getProperty(name: String): String? = java.lang.System.getProperty(name)
+	public actual fun setProperty(name: String, value: String): String? = java.lang.System.setProperty(name, value)
 
 	public actual fun getProperties(): MutableMap<String, String> {
 		val propHashOfAnyAny = java.lang.System.getProperties()
@@ -52,6 +53,7 @@ public actual object System {
 		get() = osType == OsType.UNIX
 	public actual val isWindows: Boolean
 		get() = osType == OsType.WINDOWS
+
 }
 
 public actual fun computeAppPath(): String {
