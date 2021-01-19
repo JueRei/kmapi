@@ -17,6 +17,7 @@ public expect object System {
 	public fun currentTimeMillis(): Long
 	public val lineSeparator: String
 	public fun getProperty(name: String): String?
+	public fun setProperty(name: String, value: String): String?
 	public fun getProperties(): MutableMap<String, String>
 	public fun exit(status: Int): Nothing
 
