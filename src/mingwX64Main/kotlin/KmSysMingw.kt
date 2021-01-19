@@ -1,12 +1,17 @@
 package de.rdvsb.kmapi
 
 import kotlinx.cinterop.*
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 //import platform.mingw_x64.ENOTFOUND
 import platform.posix.*
 import platform.windows.*
 import kotlin.math.max
+import kotlin.native.concurrent.AtomicReference
 
 import kotlin.native.concurrent.ThreadLocal
+import kotlin.native.concurrent.freeze
 import kotlin.system.exitProcess
 
 private val setLocale = setlocale(LC_ALL, "en_US.UTF-8"); // allow thousands separators
@@ -75,26 +80,40 @@ public actual object System {
 
 	public actual fun currentTimeMillis(): Long = time(null) * 1000L // getTimeMillis()
 
-	public actual val lineSeparator: String = "\\"
+	private val osName: String = getOSName()
+	public actual val lineSeparator: String = "\r\n"
 
-	private val propertyNames = arrayOf("app.name", "os.name", "file.separator")
-	private val osName: String? = getOSName()
-	public val separatorChar: String = if (osName?.indexOf(string = "win", ignoreCase = true) ?: -1 >= 0) "\\" else "/"
+	private val propertyMap = AtomicReference(
+		mapOf(
+			"app.name" to nativeAppPath(),
+			"os.name" to osName,
+			"file.separator" to File.separator,
+			"line.separator" to lineSeparator,
+			"path.separator" to ";",
+		).freeze()
+	)
 
-	public actual fun getProperty(name: String): String? =
-		when {
-			name == "app.name"       -> nativeAppPath()
-			name == "os.name"        -> osName
-			name == "file.separator" -> separatorChar
-			else                     -> null
+	public actual fun getProperty(name: String): String? = propertyMap.value[name]
+
+	public actual fun setProperty(name: String, value: String): String? {
+		return runBlocking {
+			Mutex().withLock {
+				val oldMap = propertyMap.value
+				val oldValue = oldMap[name]
+				if (oldValue == value) return@runBlocking value
+
+				// AtomicReference is always frozen. Replace ref with a new map
+				val newMap = oldMap.toMutableMap()
+				newMap[name] = value
+				newMap.freeze()
+				propertyMap.value = newMap
+				return@runBlocking oldValue
+			}
 		}
+	}
 
 	public actual fun getProperties(): MutableMap<String, String> {
-		val propMap = mutableMapOf<String, String>()
-		propertyNames.forEach { name ->
-			propMap[name] = getProperty(name) ?: "<null>"
-		}
-		return propMap
+		return propertyMap.value.toMutableMap()
 	}
 
 	public actual val isUnix: Boolean
