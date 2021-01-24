@@ -25,4 +25,5 @@ public expect object System {
 	public val isWindows: Boolean
 }
 
-public expect fun computeAppPath(): String
+//* mainObj: any object in the main module (e.g. getArgs)
+public expect fun computeAppPath(mainObj: Any? = null): String

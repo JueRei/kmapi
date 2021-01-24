@@ -1,5 +1,9 @@
 package de.rdvsb.kmapi
 
+
+
+
+
 public actual object System {
 	public actual object err {
 		public actual fun println(line: String): Unit = java.lang.System.err.println(line)
@@ -10,6 +14,10 @@ public actual object System {
 	public actual object out {
 		public actual fun println(line: String): Unit = java.lang.System.out.println(line)
 		public actual fun print(text: String): Unit = java.lang.System.out.print(text)
+	}
+
+	init {
+		if (getProperty("app.name") == null) setProperty("app.name", computeAppPath())
 	}
 
 	public actual fun getenv(name: String): String? = java.lang.System.getenv(name)
@@ -56,14 +64,25 @@ public actual object System {
 
 }
 
-public actual fun computeAppPath(): String {
+public actual fun computeAppPath(mainObj: Any?): String {
 	// if part of a KScript env KSCRIPT_FILE is set to path of script
 	System.getenv("KSCRIPT_FILE")?.run {
 		return this
 	}
 
+	// if part of a KScript getArgs is a subclass of predefined "script" class (e.g. "Fetch_hkg_adm556.getArgs")
+	mainObj?.apply {
+		javaClass.canonicalName.split('.', limit = 2)?.run {
+			if (size == 2) return get(0).decapitalize()
+		}
+	}
+
 	// else get java app.name or first param of commandline
-	return System.getProperty("app.name")
-		?: System.getProperty("sun.java.command")?.split(' ', limit = 2)?.get(0)?.removeSurrounding("\"")?.removeSurrounding("'")
-		?: "_appName_"
+	val appPath = System.getProperty("sun.java.command")?.split(' ', limit = 2)?.get(0)	?: "_appName_"
+	appPath.run {
+		removeSurrounding("\"")
+		removeSurrounding("'")
+		removeSuffix(".jar")
+	}
+	return appPath
 }

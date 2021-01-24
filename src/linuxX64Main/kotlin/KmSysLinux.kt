@@ -8,6 +8,7 @@ import platform.posix.*
 import kotlin.native.concurrent.AtomicReference
 import kotlin.native.concurrent.freeze
 import kotlin.system.exitProcess
+import kotlin.system.getTimeMillis
 
 private fun getOSName(): String {
 	memScoped {
@@ -52,7 +53,7 @@ public actual object System {
 
 	public actual fun getenv(name: String): String? = platform.posix.getenv(name)?.toKString()
 
-	public actual fun currentTimeMillis(): Long = time(null) * 1000L // getTimeMillis()
+	public actual fun currentTimeMillis(): Long = getTimeMillis()
 
 	private val osName: String = getOSName()
 	public actual val lineSeparator: String = "\n"
@@ -100,4 +101,4 @@ public actual object System {
 		get() = false
 }
 
-public actual fun computeAppPath(): String = nativeAppPath()
+public actual fun computeAppPath(mainObj: Any?): String = nativeAppPath()

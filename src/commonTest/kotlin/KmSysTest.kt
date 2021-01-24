@@ -15,6 +15,9 @@ internal class SysCommonTest {
 		println("lineSeparator=${System.lineSeparator.encodeToByteArray().map { it }}")
 		println("getProperty(\"line.separator\")=${System.getProperty("line.separator")?.encodeToByteArray()?.map { it }}")
 
+		println("app.name=${System.getProperty("app.name")}")
+		println("sun.java.command=${System.getProperty("sun.java.command")}")
+
 		println("${System.getProperties().toString().replace("\r", "\\r").replace("\n", "\\n")}")
 		var property = System.setProperty("http.agent", "Chrome")
 		println("1. setProperty=$property")
