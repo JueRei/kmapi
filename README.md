@@ -2,7 +2,7 @@
 Provide some useful Java standard library API classes for Kotlin Native
 
 
-## Preliminary version 0.0.1
+## Preliminary version 0.1.2
 ### parts working
 
 | Module | Common | JVM | NativeLinux | NativeMingw |
