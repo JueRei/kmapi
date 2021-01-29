@@ -19,3 +19,22 @@ public interface FileNativeCommon {
 }
 
 
+/**
+ * Reads this file line by line  calls [action] for each line.
+ * charset is UTF-8.
+ *
+ * @param action function to process file lines.
+ */
+public actual fun File.forEachLine(action: (line: String) -> Unit) {
+	// Note: close is called at forEachLine
+	TODO("forEachLine not implemented for native")
+}
+
+/**
+ * Gets the entire content of this file as a String using UTF-8
+ *
+ * This method is not recommended on huge files. It has an internal limitation of 2 GB file size.
+ *
+ * @return the entire content of this file as a String.
+ */
+public actual fun File.readText(): String = TODO("readText not implemented for native")

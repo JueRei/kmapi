@@ -5,7 +5,11 @@
 
 package de.rdvsb.kmapi
 
+import java.io.BufferedReader
+import java.io.FileInputStream
 import java.io.IOException
+import java.io.InputStreamReader
+import java.nio.charset.Charset
 import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.Path
 import java.io.File as JavaIOFile
@@ -173,7 +177,25 @@ public actual class File actual constructor(pathName: String): JavaIOFile(pathNa
 		dirStream.close()
 		return callBack(CallBackFor.LEAVEDIR, this, null)
 	}
-
-
 }
 
+/**
+ * Reads this file line by line  calls [action] for each line.
+ * charset is UTF-8.
+ *
+ * @param action function to process file lines.
+ */
+public actual fun File.forEachLine(action: (line: String) -> Unit) {
+	// Note: close is called at forEachLine
+	BufferedReader(InputStreamReader(FileInputStream(this))).forEachLine(action)
+}
+
+
+/**
+ * Gets the entire content of this file as a String using UTF-8
+ *
+ * This method is not recommended on huge files. It has an internal limitation of 2 GB file size.
+ *
+ * @return the entire content of this file as a String.
+ */
+public actual fun File.readText(): String = reader().use { it.readText() }

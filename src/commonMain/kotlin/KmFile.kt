@@ -69,3 +69,20 @@ public fun File.deleteDir(filesOnly: Boolean, retries: UInt = 0U): Boolean { // 
 }
 
 
+
+/**
+ * Reads this file line by line  calls [action] for each line.
+ * charset is UTF-8.
+ *
+ * @param action function to process file lines.
+ */
+public expect fun File.forEachLine(action: (line: String) -> Unit): Unit
+
+/**
+ * Gets the entire content of this file as a String using UTF-8
+ *
+ * This method is not recommended on huge files. It has an internal limitation of 2 GB file size.
+ *
+ * @return the entire content of this file as a String.
+ */
+public expect fun File.readText(): String
