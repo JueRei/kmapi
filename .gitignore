@@ -1,7 +1,10 @@
 **/.idea/
+*.bak
 *.iml
 *.ipr
 *.iws
+*.log
+*.tmp
 **/out/
 **/scratches/
 

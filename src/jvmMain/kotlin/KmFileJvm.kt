@@ -16,6 +16,7 @@ import java.io.File as JavaIOFile
 import java.nio.file.attribute.BasicFileAttributes
 
 import java.nio.file.Files
+import java.util.*
 import kotlin.io.path.isDirectory
 import kotlin.io.path.name
 
@@ -94,9 +95,9 @@ public actual class File actual constructor(pathName: String): JavaIOFile(pathNa
 			// shouldn't really get here:
 			//   Java has no std access to the Unix/Windows device attribute, so we simulate it by checking device names
 			//   this is just a heuristic!
-			val absPath = super.getAbsolutePath().toLowerCase()
+			val absPath = super.getAbsolutePath().lowercase(Locale.getDefault())
 			if (absPath.startsWith("/dev/") || absPath.startsWith("\\device\\") || absPath.startsWith("\\dosdevices\\")) return true
-			val msdosName = absPath.removeSuffix(":").toUpperCase()
+			val msdosName = absPath.removeSuffix(":").uppercase(Locale.getDefault())
 			if (msdosName == "NUL" || msdosName == "PRT" || msdosName == "AUX"
 				|| msdosName == "AUX" || msdosName == "COM1" || msdosName == "COM2" || msdosName == "COM3"
 				|| msdosName == "LPT1" || msdosName == "LPT2" || msdosName == "LPT3") {
@@ -157,7 +158,7 @@ public actual class File actual constructor(pathName: String): JavaIOFile(pathNa
 
 			if (dirEnt.isDirectory()) {
 				callBackResult = foundFile.walkDir(callBack)
-			} else{
+			} else {
 				callBackResult = callBack(CallBackFor.FILE, foundFile, null)
 			}
 
@@ -167,10 +168,11 @@ public actual class File actual constructor(pathName: String): JavaIOFile(pathNa
 					return callBackResult
 				}
 
-				CallBackResult.LEAVE -> {
+				CallBackResult.LEAVE                           -> {
 					dirStream.close()
 					return callBack(CallBackFor.LEAVEDIR, this, null)
 				}
+				else                                           -> return callBackResult
 			}
 		}
 

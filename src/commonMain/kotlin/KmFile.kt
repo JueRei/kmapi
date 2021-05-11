@@ -54,7 +54,7 @@ public fun File.deleteDir(filesOnly: Boolean, retries: UInt = 0U): Boolean { // 
 
 	val walkRC = walkDir callBack@{ callBackFor, foundFile, _ ->
 		when (callBackFor) {
-			File.CallBackFor.ENTERDIR -> return@callBack File.CallBackResult.ENTER
+			File.CallBackFor.ENTERDIR -> File.CallBackResult.ENTER
 
 			File.CallBackFor.LEAVEDIR,
 			File.CallBackFor.FILE     -> {
@@ -62,6 +62,7 @@ public fun File.deleteDir(filesOnly: Boolean, retries: UInt = 0U): Boolean { // 
 				foundFile.delete(retries)
 				File.CallBackResult.OK
 			}
+			else                      -> File.CallBackResult.OK
 		}
 	}
 
