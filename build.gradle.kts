@@ -8,6 +8,7 @@ plugins {
 group = "de.rdvsb"
 version = "0.1.3-SNAPSHOT"
 
+val kotlinVersion = "1.5.10"
 val coroutinesVersion = "1.5.0"
 
 
