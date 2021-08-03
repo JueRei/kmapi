@@ -15,6 +15,13 @@ import kotlin.native.concurrent.freeze
 import kotlin.system.exitProcess
 import kotlin.system.getTimeMillis
 
+
+private fun epochMillis(): Long = memScoped {
+	val timeVal = alloc<timeval>()
+	gettimeofday(timeVal.ptr, null)
+	(timeVal.tv_sec * 1000) + (timeVal.tv_usec / 1000)
+}
+
 private fun getOSName(): String {
 	memScoped {
 		val utsName = alloc<utsname>()
@@ -58,7 +65,7 @@ public actual object System {
 
 	public actual fun getenv(name: String): String? = platform.posix.getenv(name)?.toKString()
 
-	public actual fun currentTimeMillis(): Long = getTimeMillis()
+	public actual fun currentTimeMillis(): Long = epochMillis()
 
 	private val osName: String = getOSName()
 	public actual val lineSeparator: String = "\n"

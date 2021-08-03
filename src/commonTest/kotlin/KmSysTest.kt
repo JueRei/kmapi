@@ -15,7 +15,7 @@ internal class SysCommonTest {
 
 	@Test
 	fun sysTest() {
-		println("SysCommonTest.sysTest start")
+		println("SysCommonTest.sysTest start currentTimeMillis=${System.currentTimeMillis()}")
 
 		println("lineSeparator=${System.lineSeparator.encodeToByteArray().map { it }}")
 		println("getProperty(\"line.separator\")=${System.getProperty("line.separator")?.encodeToByteArray()?.map { it }}")

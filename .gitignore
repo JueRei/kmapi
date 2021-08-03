@@ -1,8 +1,10 @@
 **/.idea/
 *.bak
+*.class
 *.iml
 *.ipr
 *.iws
+*.jar
 *.log
 *.tmp
 **/out/
