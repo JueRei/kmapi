@@ -9,10 +9,7 @@ package de.rdvsb.kmapi
 public interface FileNativeCommon {
 	public val path: String
 	public val name: String
-		get() {
-			val ix = path.lastIndexOf(File.separatorChar)
-			return path.substring(ix + 1)
-		}
+		get() = path.substringAfterLast(File.separatorChar)
 
 	public val isInvalid: Boolean get() = path.isEmpty() || path.contains('\u0000')
 
