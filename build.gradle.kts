@@ -1,15 +1,18 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	kotlin("multiplatform") version "1.5.30"
+	kotlin("multiplatform")
 	`maven-publish`
 }
 
 group = "de.rdvsb"
-version = "0.1.5-SNAPSHOT"
+version = "0.1.6-SNAPSHOT"
 
-val kotlinVersion = "1.5.30"
-val coroutinesVersion = "1.5.1"
+val ktor_version: String by project
+val kotlin_version: String by project
+val logback_version: String by project
+val kotlin_coroutines_version: String by project
+val kotlin_serialization_version: String by project
+val kotlin_date_version: String by project
 
 
 repositories {
@@ -43,7 +46,7 @@ kotlin {
 	sourceSets {
 		val commonMain by getting {
 			dependencies {
-				implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+				implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version")
 			}
 
 		}
