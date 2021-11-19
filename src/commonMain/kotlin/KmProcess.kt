@@ -7,7 +7,7 @@ package de.rdvsb.kmapi
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
+//@OptIn(ExperimentalTime::class)
 public expect class KmProcess(process: Any) {
 	public val outputStream: OutputStream // connected do STDIN of process
 	public val inputStream: InputStream // connected do STDOUT of process

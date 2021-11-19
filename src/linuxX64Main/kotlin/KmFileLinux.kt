@@ -212,6 +212,7 @@ public actual class File actual constructor(pathName: String) : FileNativeCommon
 					closedir(dirH)
 					return callBack(CallBackFor.LEAVEDIR, this, null)
 				}
+				else -> {}
 			}
 		}
 

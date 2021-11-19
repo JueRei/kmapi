@@ -5,6 +5,8 @@
 
 package de.rdvsb.kmapi
 
+import java.util.*
+
 public actual object System {
 	public actual object err {
 		public actual fun println(line: String): Unit = java.lang.System.err.println(line)
@@ -74,7 +76,7 @@ public actual fun computeAppPath(mainObj: Any?): String {
 	// if part of a KScript getArgs is a subclass of predefined "script" class (e.g. "Fetch_hkg_adm556.getArgs")
 	mainObj?.apply {
 		javaClass.canonicalName.split('.', limit = 2)?.run {
-			if (size == 2) return get(0).decapitalize()
+			if (size == 2) return get(0).replaceFirstChar { it.lowercase(Locale.getDefault()) }
 		}
 	}
 

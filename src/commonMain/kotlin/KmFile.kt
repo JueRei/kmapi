@@ -4,6 +4,9 @@
  */
 package de.rdvsb.kmapi
 
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
+
 public expect class File(pathName: String) {
 
 	public companion object {
@@ -87,3 +90,10 @@ public expect fun File.forEachLine(action: (line: String) -> Unit): Unit
  * @return the entire content of this file as a String.
  */
 public expect fun File.readText(): String
+
+/**
+ * returns the time span since the last modification
+ *
+ * @return Duration since last modification.
+ */
+public fun File.modificationAge():Duration = (System.currentTimeMillis() - this.lastModified()).milliseconds

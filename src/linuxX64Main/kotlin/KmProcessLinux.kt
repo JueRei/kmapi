@@ -8,7 +8,7 @@ package de.rdvsb.kmapi
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
+//@OptIn(ExperimentalTime::class)
 public actual class KmProcess actual constructor(process: Any) {
 	private var linuxProcess: Any = process
 

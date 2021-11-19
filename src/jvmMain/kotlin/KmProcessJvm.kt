@@ -8,8 +8,9 @@ package de.rdvsb.kmapi
 import java.lang.Process
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
+import kotlin.time.toTimeUnit
 
-@OptIn(ExperimentalTime::class)
+//@OptIn(ExperimentalTime::class)
 public actual class KmProcess actual constructor(process: Any) {
 	private var jvmProcess: java.lang.Process = process as java.lang.Process
 	public actual val outputStream: OutputStream = jvmProcess.outputStream as OutputStream // connected do STDIN of process
@@ -18,7 +19,7 @@ public actual class KmProcess actual constructor(process: Any) {
 
 	public actual fun waitFor(): Int = jvmProcess.waitFor()
 
-	public actual fun waitFor(timeout: Long, unit: DurationUnit): Boolean = jvmProcess.waitFor(timeout, unit)
+	public actual fun waitFor(timeout: Long, unit: DurationUnit): Boolean = jvmProcess.waitFor(timeout, unit.toTimeUnit())
 
 	public actual fun destroy(): Unit = jvmProcess.destroy()
 

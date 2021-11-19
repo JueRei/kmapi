@@ -201,3 +201,4 @@ public actual fun File.forEachLine(action: (line: String) -> Unit) {
  * @return the entire content of this file as a String.
  */
 public actual fun File.readText(): String = reader().use { it.readText() }
+
