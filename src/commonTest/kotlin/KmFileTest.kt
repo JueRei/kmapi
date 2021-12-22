@@ -10,7 +10,7 @@ import kotlin.test.assertTrue
 
 
 internal class FileCommonTest {
-	private val tstFile = File("../x.x")
+	private val tstFile = File("..${File.separatorChar}x.x")
 
 	@Test
 	fun fileName() {
@@ -18,7 +18,7 @@ internal class FileCommonTest {
 
 		println("  File: name=${tstFile.name} path=${tstFile.path} absolutePath=${tstFile.absolutePath}  canonicalPath=${tstFile.canonicalPath}")
 		assertTrue(tstFile.name.startsWith("x.x"))
-		assertTrue(tstFile.path.startsWith("../"))
+		assertTrue(tstFile.path.startsWith("..${File.separatorChar}"))
 
 		println("FileCommonTest.fileName end")
 	}
