@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Jürgen Reichmann, Jettingen, Germany
+ * Copyright 2021-2022 Jürgen Reichmann, Jettingen, Germany
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 package de.rdvsb.kmapi
@@ -72,6 +72,18 @@ public fun File.deleteDir(filesOnly: Boolean, retries: UInt = 0U): Boolean { // 
 	return true
 }
 
+/**
+ * try to rename File to newFile
+ * @param removeDestFirst: remove fileDstPath if it exists
+ * @return `true` on success, `false` on cannot rename
+ */
+public fun File.tryRenameTo(newFile: File, removeDestFirst: Boolean = false): Boolean {
+	try {
+		if (!newFile.exists() || newFile.delete(1U))	return this.renameTo(newFile)
+	} catch (e: Exception) {
+	}
+	return false
+}
 
 
 /**
