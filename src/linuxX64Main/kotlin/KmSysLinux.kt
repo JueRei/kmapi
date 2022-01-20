@@ -13,8 +13,6 @@ import platform.posix.*
 import kotlin.native.concurrent.AtomicReference
 import kotlin.native.concurrent.freeze
 import kotlin.system.exitProcess
-import kotlin.system.getTimeMillis
-
 
 private fun epochMillis(): Long = memScoped {
 	val timeVal = alloc<timeval>()
@@ -74,7 +72,7 @@ public actual object System {
 		mapOf(
 			"app.name" to nativeAppPath(),
 			"os.name" to osName,
-			"file.separator" to File.separator,
+			"file.separator" to KmFile.separator,
 			"line.separator" to lineSeparator,
 			"path.separator" to ":",
 		).freeze()

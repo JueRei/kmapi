@@ -12,7 +12,6 @@ import kotlinx.coroutines.sync.withLock
 //import platform.mingw_x64.ENOTFOUND
 import platform.posix.*
 import platform.windows.*
-import kotlin.math.max
 import kotlin.native.concurrent.AtomicReference
 
 import kotlin.native.concurrent.ThreadLocal
@@ -93,7 +92,7 @@ public actual object System {
 		mapOf(
 			"app.name" to nativeAppPath(),
 			"os.name" to osName,
-			"file.separator" to File.separator,
+			"file.separator" to KmFile.separator,
 			"line.separator" to lineSeparator,
 			"path.separator" to ";",
 		).freeze()

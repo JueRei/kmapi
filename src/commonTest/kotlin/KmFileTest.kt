@@ -10,15 +10,15 @@ import kotlin.test.assertTrue
 
 
 internal class FileCommonTest {
-	private val tstFile = File("..${File.separatorChar}x.x")
+	private val tstFile = KmFile("..${KmFile.separatorChar}x.x")
 
 	@Test
 	fun fileName() {
 		println("FileCommonTest.fileName start")
 
-		println("  File: name=${tstFile.name} path=${tstFile.path} absolutePath=${tstFile.absolutePath}  canonicalPath=${tstFile.canonicalPath}")
+		println("  KmFile: name=${tstFile.name} path=${tstFile.path} absolutePath=${tstFile.absolutePath}  canonicalPath=${tstFile.canonicalPath}")
 		assertTrue(tstFile.name.startsWith("x.x"))
-		assertTrue(tstFile.path.startsWith("..${File.separatorChar}"))
+		assertTrue(tstFile.path.startsWith("..${KmFile.separatorChar}"))
 
 		println("FileCommonTest.fileName end")
 	}

@@ -10,7 +10,7 @@ import kotlin.test.assertTrue
 
 
 internal class FileNativeTest {
-	private val tstFile = File("/tmp/x.x")
+	private val tstFile = KmFile("/tmp/x.x")
 
 	@Test
 	fun fileName() {

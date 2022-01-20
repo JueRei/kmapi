@@ -26,7 +26,7 @@ public fun posixErrorMessage(err: Int): String {
 }
 
 
-public actual class File actual constructor(pathName: String) : FileNativeCommon {
+public actual class KmFile actual constructor(pathName: String) : FileNativeCommon {
 	private var pathName = pathName
 	actual override val path: String
 		get() = pathName
@@ -39,10 +39,10 @@ public actual class File actual constructor(pathName: String) : FileNativeCommon
 			get() = '/'
 		public actual val separator: String
 			get() = "/"
-		public actual fun createTempDirectory(prefix: String): File {
+		public actual fun createTempDirectory(prefix: String): KmFile {
 			val dirName = "/tmp/$prefix${random()}"
 			mkdir(dirName, 7U shl 6) // 0700 only owner:rwx
-			return File(dirName)
+			return KmFile(dirName)
 		}
 
 		private val wcharBufSize = max(128 * 256, PATH_MAX)
@@ -91,29 +91,29 @@ public actual class File actual constructor(pathName: String) : FileNativeCommon
 			}
 			return absName ?: ""
 		}
-	public actual val absoluteFile: File
-		get() = File(absolutePath)
+	public actual val absoluteFile: KmFile
+		get() = KmFile(absolutePath)
 	public actual val canonicalPath: String
 
 		get() =  absolutePath
-	public actual val canonicalFile: File
+	public actual val canonicalFile: KmFile
 		get() = absoluteFile
 
 
 	public actual fun exists(): Boolean = fillFileAttributes(true)
 	public actual val isDirectory: Boolean get() = fillFileAttributes(false) && (fileMode and S_IFDIR.toUInt() != 0U)
 	public actual val isDevice: Boolean get() = fillFileAttributes(true) && (fileMode and (S_IFBLK.toUInt() or S_IFCHR.toUInt()) != 0U)
-	public actual val isSymbolicLink: Boolean get() = fillFileAttributes(true) && (fileMode and S_IFLNK.toUInt() != 0U) // not in Java File class
+	public actual val isSymbolicLink: Boolean get() = fillFileAttributes(true) && (fileMode and S_IFLNK.toUInt() != 0U) // not in Java KmFile class
 	public actual val isHidden: Boolean get() = name.startsWith('.')
 	public actual val isFile: Boolean get() = !isDirectory && !isDevice && fileMode != 0U
 	public actual fun canWrite(): Boolean = fillFileAttributes(true) && (fileMode and S_IWUSR.toUInt() != 0U)
 	public actual fun canRead(): Boolean = fillFileAttributes(true) && (fileMode and S_IRUSR.toUInt() != 0U)
 
 	public actual fun lastModified(): Long = if (fillFileAttributes(true)) mTimeMS else 0L
-	public actual fun creationTime(): Long = if (fillFileAttributes(true)) cTimeMS else 0L // not in Java File class
+	public actual fun creationTime(): Long = if (fillFileAttributes(true)) cTimeMS else 0L // not in Java KmFile class
 	public actual fun length(): Long = if (fillFileAttributes(true)) fileLength else 0L
 
-	public actual fun renameTo(newFile: File): Boolean {
+	public actual fun renameTo(newFile: KmFile): Boolean {
 		if (pathName.isEmpty() || newFile.pathName.isEmpty() || canonicalPath == newFile.canonicalPath) return false
 
 		val rc = rename(canonicalPath, newFile.canonicalPath)
@@ -157,7 +157,7 @@ public actual class File actual constructor(pathName: String) : FileNativeCommon
 	public actual enum class CallBackFor { ENTERDIR, FILE, LEAVEDIR }
 	public actual enum class CallBackResult { OK, NOK, ENTER, SKIP, LEAVE, TERMINATE, ABORT }
 
-	public actual fun walkDir(callBack: (callBackFor: CallBackFor, file: File, errorStr: String?) -> CallBackResult): CallBackResult {
+	public actual fun walkDir(callBack: (callBackFor: CallBackFor, file: KmFile, errorStr: String?) -> CallBackResult): CallBackResult {
 		if (isFile) return callBack(CallBackFor.FILE, this, null)
 		if (!isDirectory) return CallBackResult.NOK
 
@@ -188,7 +188,7 @@ public actual class File actual constructor(pathName: String) : FileNativeCommon
 			if (fName == "." || fName == "..") continue@NextFile
 			//println("Find*FileW: fName=$fName findFileDataBuf.nFileSizeHigh=${findFileDataBuf.nFileSizeHigh} findFileDataBuf.nFileSizeLow=${findFileDataBuf.nFileSizeLow}")
 
-			val foundFile = File("$path$separatorChar$fName", "$absolutePath$separatorChar$fName", "$canonicalPath$separatorChar$fName")
+			val foundFile = KmFile("$path$separatorChar$fName", "$absolutePath$separatorChar$fName", "$canonicalPath$separatorChar$fName")
 
 			var isDir: Boolean
 			if (dirEnt.pointed.d_type.toInt() == DT_UNKNOWN) {

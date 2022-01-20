@@ -9,7 +9,6 @@ import java.io.BufferedReader
 import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStreamReader
-import java.nio.charset.Charset
 import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.Path
 import java.io.File as JavaIOFile
@@ -20,9 +19,9 @@ import java.util.*
 import kotlin.io.path.isDirectory
 import kotlin.io.path.name
 
-//public actual typealias File = java.io.File
+//public actual typealias KmFile = java.io.KmFile
 
-public actual class File actual constructor(pathName: String): JavaIOFile(pathName) {
+public actual class KmFile actual constructor(pathName: String): JavaIOFile(pathName) {
 
 	public actual companion object {
 		public actual val separatorChar: Char
@@ -31,8 +30,8 @@ public actual class File actual constructor(pathName: String): JavaIOFile(pathNa
 			get() = JavaIOFile.separator
 
 		@OptIn(ExperimentalPathApi::class)
-		public actual fun createTempDirectory(prefix: String): File {
-			return File(java.nio.file.Files.createTempDirectory(prefix).name)
+		public actual fun createTempDirectory(prefix: String): KmFile {
+			return KmFile(java.nio.file.Files.createTempDirectory(prefix).name)
 		}
 	}
 
@@ -45,15 +44,15 @@ public actual class File actual constructor(pathName: String): JavaIOFile(pathNa
 	public actual val absolutePath: String
 		@JvmName("getAbsolutePathX")
 		get() = super.getAbsolutePath()
-	public actual val absoluteFile: File
+	public actual val absoluteFile: KmFile
 		@JvmName("getAbsoluteFileX")
-		get() = File(getAbsolutePath())
+		get() = KmFile(getAbsolutePath())
 	public actual val canonicalPath: String
 		@JvmName("getCanonicalPathX")
 		get() = super.getCanonicalPath()
-	public actual val canonicalFile: File
+	public actual val canonicalFile: KmFile
 		@JvmName("getCanonicalFileX")
-		get() = File(getCanonicalPath())
+		get() = KmFile(getCanonicalPath())
 
 
 	private var fileAttr: BasicFileAttributes? = null
@@ -108,7 +107,7 @@ public actual class File actual constructor(pathName: String): JavaIOFile(pathNa
 
 	public actual fun creationTime(): Long = fillFileAttributes()?.creationTime()?.toMillis() ?: 0L
 
-	public actual fun renameTo(newFile: File): Boolean = super.renameTo(newFile)
+	public actual fun renameTo(newFile: KmFile): Boolean = super.renameTo(newFile)
 
 	public actual fun delete(retries: UInt): Boolean {
 		if (super.delete()) return true
@@ -132,7 +131,7 @@ public actual class File actual constructor(pathName: String): JavaIOFile(pathNa
 	public actual enum class CallBackResult { OK, NOK, ENTER, SKIP, LEAVE, TERMINATE, ABORT }
 
 	@OptIn(ExperimentalPathApi::class)
-	public actual fun walkDir(callBack: (callBackFor: CallBackFor, file: File, errorStr: String?) -> CallBackResult): CallBackResult {
+	public actual fun walkDir(callBack: (callBackFor: CallBackFor, file: KmFile, errorStr: String?) -> CallBackResult): CallBackResult {
 		if (isFile) return callBack(CallBackFor.FILE, this, null)
 		if (!isDirectory) return CallBackResult.NOK
 
@@ -154,7 +153,7 @@ public actual class File actual constructor(pathName: String): JavaIOFile(pathNa
 			if (fName == "." || fName == "..") continue@NextFile
 			//println("Find*FileW: fName=$fName findFileDataBuf.nFileSizeHigh=${findFileDataBuf.nFileSizeHigh} findFileDataBuf.nFileSizeLow=${findFileDataBuf.nFileSizeLow}")
 
-			val foundFile = File("$path$separatorChar$fName")
+			val foundFile = KmFile("$path$separatorChar$fName")
 
 			if (dirEnt.isDirectory()) {
 				callBackResult = foundFile.walkDir(callBack)
@@ -187,7 +186,7 @@ public actual class File actual constructor(pathName: String): JavaIOFile(pathNa
  *
  * @param action function to process file lines.
  */
-public actual fun File.forEachLine(action: (line: String) -> Unit) {
+public actual fun KmFile.forEachLine(action: (line: String) -> Unit) {
 	// Note: close is called at forEachLine
 	BufferedReader(InputStreamReader(FileInputStream(this))).forEachLine(action)
 }
@@ -200,5 +199,5 @@ public actual fun File.forEachLine(action: (line: String) -> Unit) {
  *
  * @return the entire content of this file as a String.
  */
-public actual fun File.readText(): String = reader().use { it.readText() }
+public actual fun KmFile.readText(): String = reader().use { it.readText() }
 

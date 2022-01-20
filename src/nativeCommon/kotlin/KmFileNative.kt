@@ -9,7 +9,7 @@ package de.rdvsb.kmapi
 public interface FileNativeCommon {
 	public val path: String
 	public val name: String
-		get() = path.substringAfterLast(File.separatorChar)
+		get() = path.substringAfterLast(KmFile.separatorChar)
 
 	public val isInvalid: Boolean get() = path.isEmpty() || path.contains('\u0000')
 
@@ -22,7 +22,7 @@ public interface FileNativeCommon {
  *
  * @param action function to process file lines.
  */
-public actual fun File.forEachLine(action: (line: String) -> Unit) {
+public actual fun KmFile.forEachLine(action: (line: String) -> Unit) {
 	// Note: close is called at forEachLine
 	TODO("forEachLine not implemented for native")
 }
@@ -34,4 +34,4 @@ public actual fun File.forEachLine(action: (line: String) -> Unit) {
  *
  * @return the entire content of this file as a String.
  */
-public actual fun File.readText(): String = TODO("readText not implemented for native")
+public actual fun KmFile.readText(): String = TODO("readText not implemented for native")

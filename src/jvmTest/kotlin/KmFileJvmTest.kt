@@ -7,10 +7,10 @@ package de.rdvsb.kmapi
 
 import kotlin.test.Test
 import kotlin.test.assertTrue
-//import java.io.File
+//import java.io.KmFile
 
 internal class FileJvmTest {
-	private val tstFile = File("/tmp/x.x")
+	private val tstFile = KmFile("/tmp/x.x")
 	private val f = java.io.File("/tmp/x1.x")
 
 	@Test

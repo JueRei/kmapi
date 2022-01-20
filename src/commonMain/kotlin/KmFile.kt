@@ -7,12 +7,12 @@ package de.rdvsb.kmapi
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
-public expect class File(pathName: String) {
+public expect class KmFile(pathName: String) {
 
 	public companion object {
 		public val separatorChar: Char
 		public val separator: String
-		public fun createTempDirectory(prefix: String): File
+		public fun createTempDirectory(prefix: String): KmFile
 	}
 
 	override fun toString(): String
@@ -21,51 +21,51 @@ public expect class File(pathName: String) {
 	public val path: String
 
 	public val absolutePath: String
-	public val absoluteFile: File
+	public val absoluteFile: KmFile
 
 	public val canonicalPath: String
-	public val canonicalFile: File
+	public val canonicalFile: KmFile
 
 	public fun exists(): Boolean
 	public val isFile: Boolean
 	public val isDirectory: Boolean
-	public val isDevice: Boolean // not in Java.io.File
-	public val isSymbolicLink: Boolean // not in Java.io.File
+	public val isDevice: Boolean // not in Java.io.KmFile
+	public val isSymbolicLink: Boolean // not in Java.io.KmFile
 	public val isHidden: Boolean
 
 	public fun canWrite():Boolean
 
 	public fun canRead(): Boolean
 	public fun lastModified(): Long
-	public fun creationTime(): Long // not in Java.io.File
+	public fun creationTime(): Long // not in Java.io.KmFile
 	public fun length(): Long
 
-	public fun renameTo(newFile: File): Boolean
+	public fun renameTo(newFile: KmFile): Boolean
 
-	// some extras not found in java.io.File:
+	// some extras not found in java.io.KmFile:
 	public enum class CallBackFor { ENTERDIR, FILE, LEAVEDIR }
 	public enum class CallBackResult { OK, NOK, ENTER, SKIP, LEAVE, TERMINATE, ABORT }
 
-	public fun walkDir(callBack: (callBackFor: CallBackFor, file: File, errorStr: String?) -> CallBackResult): CallBackResult
+	public fun walkDir(callBack: (callBackFor: CallBackFor, file: KmFile, errorStr: String?) -> CallBackResult): CallBackResult
 
 	public fun delete(retries: UInt = 0U): Boolean
 }
 
-public fun File.deleteDir(filesOnly: Boolean, retries: UInt = 0U): Boolean { // not in Java.io.File
+public fun KmFile.deleteDir(filesOnly: Boolean, retries: UInt = 0U): Boolean { // not in Java.io.KmFile
 	// recursively delete dir
 	if (name.isEmpty() || !isDirectory) return false
 
 	val walkRC = walkDir callBack@{ callBackFor, foundFile, _ ->
 		when (callBackFor) {
-			File.CallBackFor.ENTERDIR -> File.CallBackResult.ENTER
+			KmFile.CallBackFor.ENTERDIR -> KmFile.CallBackResult.ENTER
 
-			File.CallBackFor.LEAVEDIR,
-			File.CallBackFor.FILE     -> {
-				filesOnly && foundFile.isDirectory && return@callBack File.CallBackResult.OK
+			KmFile.CallBackFor.LEAVEDIR,
+			KmFile.CallBackFor.FILE     -> {
+				filesOnly && foundFile.isDirectory && return@callBack KmFile.CallBackResult.OK
 				foundFile.delete(retries)
-				File.CallBackResult.OK
+				KmFile.CallBackResult.OK
 			}
-			else                      -> File.CallBackResult.OK
+			else                        -> KmFile.CallBackResult.OK
 		}
 	}
 
@@ -73,11 +73,11 @@ public fun File.deleteDir(filesOnly: Boolean, retries: UInt = 0U): Boolean { // 
 }
 
 /**
- * try to rename File to newFile
+ * try to rename KmFile to newFile
  * @param removeDestFirst: remove fileDstPath if it exists
  * @return `true` on success, `false` on cannot rename
  */
-public fun File.tryRenameTo(newFile: File, removeDestFirst: Boolean = false): Boolean {
+public fun KmFile.tryRenameTo(newFile: KmFile, removeDestFirst: Boolean = false): Boolean {
 	try {
 		if (!newFile.exists() || newFile.delete(1U))	return this.renameTo(newFile)
 	} catch (e: Exception) {
@@ -92,7 +92,7 @@ public fun File.tryRenameTo(newFile: File, removeDestFirst: Boolean = false): Bo
  *
  * @param action function to process file lines.
  */
-public expect fun File.forEachLine(action: (line: String) -> Unit): Unit
+public expect fun KmFile.forEachLine(action: (line: String) -> Unit): Unit
 
 /**
  * Gets the entire content of this file as a String using UTF-8
@@ -101,11 +101,11 @@ public expect fun File.forEachLine(action: (line: String) -> Unit): Unit
  *
  * @return the entire content of this file as a String.
  */
-public expect fun File.readText(): String
+public expect fun KmFile.readText(): String
 
 /**
  * returns the time span since the last modification
  *
  * @return Duration since last modification.
  */
-public fun File.modificationAge():Duration = (System.currentTimeMillis() - this.lastModified()).milliseconds
+public fun KmFile.modificationAge():Duration = (System.currentTimeMillis() - this.lastModified()).milliseconds
