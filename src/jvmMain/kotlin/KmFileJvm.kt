@@ -29,7 +29,6 @@ public actual class KmFile actual constructor(pathName: String): JavaIOFile(path
 		public actual val separator: String
 			get() = JavaIOFile.separator
 
-		@OptIn(ExperimentalPathApi::class)
 		public actual fun createTempDirectory(prefix: String): KmFile {
 			return KmFile(java.nio.file.Files.createTempDirectory(prefix).name)
 		}
@@ -57,7 +56,6 @@ public actual class KmFile actual constructor(pathName: String): JavaIOFile(path
 
 	private var fileAttr: BasicFileAttributes? = null
 
-	@OptIn(ExperimentalPathApi::class)
 	private fun fillFileAttributes(isQuiet: Boolean = false): BasicFileAttributes? {
 		if (name.isEmpty()) return null
 		if (fileAttr == null) {
@@ -81,10 +79,8 @@ public actual class KmFile actual constructor(pathName: String): JavaIOFile(path
 		@JvmName("isHiddenX")
 		get() = super.isHidden()
 
-	@OptIn(ExperimentalPathApi::class)
 	public actual val isSymbolicLink: Boolean get() = fillFileAttributes()?.isSymbolicLink ?: false
 
-	@OptIn(ExperimentalPathApi::class)
 	public actual val isDevice: Boolean
 		get() {
 			if (isFile || isDirectory) return false;
@@ -130,7 +126,6 @@ public actual class KmFile actual constructor(pathName: String): JavaIOFile(path
 	public actual enum class CallBackFor { ENTERDIR, FILE, LEAVEDIR }
 	public actual enum class CallBackResult { OK, NOK, ENTER, SKIP, LEAVE, TERMINATE, ABORT }
 
-	@OptIn(ExperimentalPathApi::class)
 	public actual fun walkDir(callBack: (callBackFor: CallBackFor, file: KmFile, errorStr: String?) -> CallBackResult): CallBackResult {
 		if (isFile) return callBack(CallBackFor.FILE, this, null)
 		if (!isDirectory) return CallBackResult.NOK
