@@ -133,7 +133,6 @@ public actual class KmFile actual constructor(pathName: String): JavaIOFile(path
 		var callBackResult = callBack(CallBackFor.ENTERDIR, this, null)
 		if (callBackResult != CallBackResult.ENTER) return callBackResult
 
-
 		val dirStream = try {
 			java.nio.file.Files.newDirectoryStream(Path(absolutePath))
 		} catch (ex: Exception) {
@@ -166,7 +165,8 @@ public actual class KmFile actual constructor(pathName: String): JavaIOFile(path
 					dirStream.close()
 					return callBack(CallBackFor.LEAVEDIR, this, null)
 				}
-				else                                           -> return callBackResult
+
+				else                                           -> {}
 			}
 		}
 
