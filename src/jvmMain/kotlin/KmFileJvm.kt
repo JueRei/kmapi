@@ -15,6 +15,7 @@ import java.io.File as JavaIOFile
 import java.nio.file.attribute.BasicFileAttributes
 
 import java.nio.file.Files
+import java.nio.file.LinkOption
 import java.util.*
 import kotlin.io.path.isDirectory
 import kotlin.io.path.name
@@ -60,7 +61,8 @@ public actual class KmFile actual constructor(pathName: String): JavaIOFile(path
 		if (name.isEmpty()) return null
 		if (fileAttr == null) {
 			try {
-				val attrs = Files.readAttributes(Path(path), BasicFileAttributes::class.java)
+				// call with NOFOLLOW_LINKS to be able to detect junctions as isSymbolicLink when isDir == true && isOther = true
+				val attrs = Files.readAttributes(Path(path), BasicFileAttributes::class.java, LinkOption.NOFOLLOW_LINKS)
 				fileAttr = attrs
 			} catch (exp: IOException) {
 				return null;
@@ -79,7 +81,10 @@ public actual class KmFile actual constructor(pathName: String): JavaIOFile(path
 		@JvmName("isHiddenX")
 		get() = super.isHidden()
 
-	public actual val isSymbolicLink: Boolean get() = fillFileAttributes()?.isSymbolicLink ?: false
+	public actual val isSymbolicLink: Boolean get() = fillFileAttributes()?.let {
+		// windows junctions are not symlinks but somthing other (https://stackoverflow.com/questions/13733275/determine-whether-a-file-is-a-junction-in-windows-or-not)
+		it.isSymbolicLink || System.isWindows && it.isDirectory && it.isOther
+	} ?: false
 
 	public actual val isDevice: Boolean
 		get() {
