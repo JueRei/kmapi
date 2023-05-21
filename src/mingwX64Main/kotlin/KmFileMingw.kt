@@ -248,6 +248,11 @@ public actual class KmFile actual constructor(pathName: String) : FileNativeComm
 					FindClose(hdir)
 					return callBack(CallBackFor.LEAVEDIR, this, null)
 				}
+
+				CallBackResult.OK                              -> {}
+				CallBackResult.NOK                             -> {}
+				CallBackResult.ENTER                           -> {}
+				CallBackResult.SKIP                            -> {}
 			}
 		}
 
