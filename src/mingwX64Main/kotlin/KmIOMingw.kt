@@ -1,5 +1,6 @@
 /*
- * Copyright 2021 Jürgen Reichmann, Jettingen, Germany
+ * Copyright 2023 Jürgen Reichmann
+, Jettingen, Germany
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
@@ -14,7 +15,7 @@ public actual abstract class InputStream : Closeable {
 	public actual abstract fun read(): Int
 
 	@Throws(IOException::class)
-	public actual fun read(b: ByteArray): Int {
+	public actual open fun read(b: ByteArray): Int {
 		TODO("Not yet implemented")
 	}
 

@@ -1,7 +1,8 @@
 /*
- * Copyright 2021 Jürgen Reichmann, Jettingen, Germany
+ * Copyright 2023 Jürgen Reichmann, Jettingen, Germany
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
+@file:OptIn(ExperimentalForeignApi::class)
 
 package de.rdvsb.kmapi
 
@@ -126,7 +127,7 @@ public actual class KmFile actual constructor(pathName: String) : FileNativeComm
 	public actual fun renameTo(newFile: KmFile): Boolean {
 		if (name.isEmpty() || newFile.name.isEmpty() || canonicalPath == newFile.canonicalPath) return false
 
-		val rc = MoveFileExW(canonicalPath, newFile.canonicalPath, MOVEFILE_COPY_ALLOWED)
+		val rc = MoveFileExW(canonicalPath, newFile.canonicalPath, MOVEFILE_COPY_ALLOWED.toUInt())
 		if (rc != TRUE) {
 			val winErr = GetLastError()
 			val errStr = "$winErr:${winSysErrMessage(winErr)}"
@@ -193,7 +194,7 @@ public actual class KmFile actual constructor(pathName: String) : FileNativeComm
 					fSearchOp = _FINDEX_SEARCH_OPS.FindExSearchNameMatch,
 					fInfoLevelId = _FINDEX_INFO_LEVELS.FindExInfoBasic,
 					lpFindFileData = findFileDataBuf.ptr, lpSearchFilter = null,
-					dwAdditionalFlags = 0 // do not use FIND_FIRST_EX_LARGE_FETCH it results in wrong values for nFileSizeLow and nFileSizeHigh (a few 100 bytes difference!)
+					dwAdditionalFlags = 0u // do not use FIND_FIRST_EX_LARGE_FETCH it results in wrong values for nFileSizeLow and nFileSizeHigh (a few 100 bytes difference!)
 					// do not use FIND_FIRST_EX_ON_DISK_ENTRIES_ONLY => illegal param on Win7
 				)
 				if (hdir == INVALID_HANDLE_VALUE) {

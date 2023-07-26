@@ -1,7 +1,9 @@
 /*
- * Copyright 2021 Jürgen Reichmann, Jettingen, Germany
+ * Copyright 2023 Jürgen Reichmann
+, Jettingen, Germany
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
+@file:OptIn(ExperimentalForeignApi::class)
 
 package de.rdvsb.kmapi
 
@@ -30,7 +32,7 @@ public val cstrBuf: CArrayPointer<ByteVar> = nativeHeap.allocArray<ByteVar>(cstr
 public fun nativeAppPath(): String {
 	memScoped {
 		val buffer = allocArray<UShortVar>(MAX_PATH)
-		GetModuleFileNameW(null, buffer, MAX_PATH) // TODO: support Linux
+		GetModuleFileNameW(null, buffer, MAX_PATH.toUInt()) // TODO: support Linux
 		return buffer.toKString()
 	}
 	//return "_appName"
