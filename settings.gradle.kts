@@ -2,6 +2,11 @@ rootProject.name = "kmapi"
 
 pluginManagement {
 	val kotlin_version: String by settings
+
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
 	plugins {
 		id("org.jetbrains.kotlin.jvm").version(kotlin_version)
 		id("org.jetbrains.kotlin.kapt").version(kotlin_version)
