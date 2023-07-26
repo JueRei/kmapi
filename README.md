@@ -2,7 +2,7 @@
 Provide some useful Java standard library API classes for Kotlin Native
 
 
-## Preliminary version 0.2.3
+## Preliminary version 0.2.5
 ### 0.2.00 (__Breaking changes__)
 * de.rdvsb.kmapi.File renamed to de.rdvsb.kmapi.KmFile to avoid confusion with Java File class.
   - Use `typealias File = de.rdvsb.kmapi.KmFile` to quickfix old code 

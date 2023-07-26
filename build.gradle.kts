@@ -4,16 +4,16 @@ plugins {
 	`maven-publish`
 }
 
-group = "de.rdvsb"
-version = "0.2.5"
-
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
 val kotlin_coroutines_version: String by project
 val kotlin_serialization_version: String by project
 val kotlinx_datetime_version: String by project
+val kmapi_version: String by project
 
+group = "de.rdvsb"
+version = kmapi_version
 
 repositories {
 	//jcenter()
