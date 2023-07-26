@@ -62,7 +62,7 @@ public expect abstract class InputStream {
 	 * the buffer array `b`.
 	 */
 	@Throws(IOException::class)
-	public actual fun read(b: ByteArray): Int
+	public open fun read(b: ByteArray): Int
 
 	/**
 	 * Reads up to `len` bytes of data from the input stream into
@@ -70,7 +70,6 @@ public expect abstract class InputStream {
 	 */
 	@Throws(IOException::class)
 	public open fun read(b: ByteArray, off: Int, len: Int): Int
-
 
 
 	/**
@@ -92,7 +91,7 @@ public expect abstract class InputStream {
 	 * with the stream.
 	 */
 	@Throws(IOException::class)
-	public fun close()
+	public open fun close()
 
 	/**
 	 * Marks the current position in this input stream. A subsequent call to
