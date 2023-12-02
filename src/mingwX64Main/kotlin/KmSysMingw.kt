@@ -15,7 +15,7 @@ import kotlinx.coroutines.sync.withLock
 //import platform.mingw_x64.ENOTFOUND
 import platform.posix.*
 import platform.windows.*
-import kotlin.native.concurrent.AtomicReference
+import kotlin.concurrent.AtomicReference
 
 import kotlin.native.concurrent.ThreadLocal
 import kotlin.native.concurrent.freeze
