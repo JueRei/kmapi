@@ -75,10 +75,9 @@ public actual fun computeAppPath(mainObj: Any?): String {
 		return this
 	}
 
-	// if part of a KScript getArgs is a subclass of predefined "script" class (e.g. "Fetch_hkg_adm556.getArgs")
 	mainObj?.apply {
-		javaClass.canonicalName.split('.', limit = 2)?.run {
-			if (size == 2) return get(0).replaceFirstChar { it.lowercase(Locale.getDefault()) }
+		javaClass.canonicalName.substringBeforeLast('.').substringAfterLast('.').let { // e.g. de.rdvsb.invoicegen.GetArgs
+			if (it.isNotEmpty()) return it.replaceFirstChar { it.lowercase(Locale.getDefault()) }
 		}
 	}
 
