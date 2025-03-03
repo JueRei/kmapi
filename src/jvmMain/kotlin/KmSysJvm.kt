@@ -75,18 +75,13 @@ public actual fun computeAppPath(mainObj: Any?): String {
 		return this
 	}
 
-	mainObj?.apply {
-		javaClass.canonicalName.substringBeforeLast('.').substringAfterLast('.').let { // e.g. de.rdvsb.invoicegen.GetArgs
-			if (it.isNotEmpty()) return it.replaceFirstChar { it.lowercase(Locale.getDefault()) }
-		}
+	val appName = if (mainObj != null) {
+		// e.g. de.rdvsb.invoicegen.GetArgs
+		mainObj.javaClass.canonicalName  // e.g. de.rdvsb.invoicegen.GetArgs
+	} else {
+		// else get java app.name
+		System.getProperty("sun.java.command")?:"_appName_" // e.g. de.rdvsb.invoicegen.MainKt
 	}
 
-	// else get java app.name or first param of commandline
-	val appPath = System.getProperty("sun.java.command")?.split(' ', limit = 2)?.get(0)	?: "_appName_"
-	appPath.run {
-		removeSurrounding("\"")
-		removeSurrounding("'")
-		removeSuffix(".jar")
-	}
-	return appPath
+	return appName.substringBeforeLast('.').substringAfterLast('.').replaceFirstChar { it.lowercase(Locale.getDefault()) }
 }
